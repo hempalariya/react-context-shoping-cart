@@ -7,9 +7,13 @@
 body{
     background-color: #F3F4F6;
     font-family: sans-serif;
+    position: relative;
 }
 
+
+
 header{
+    height: 80px;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -42,12 +46,15 @@ button:hover{
 }
 
 .list-container{
+    height: calc(100vh - 80px);
     width: 70%;
-    margin: 50px auto;
+    margin: 50px auto 0;
     display: grid;
     grid-template-columns: repeat(auto-fit, 330px);
     gap: 20px;
     justify-content: center;
+    overflow-y: scroll;
+    scrollbar-width: none;
     
 }
 .card{
@@ -89,4 +96,85 @@ button:hover{
     display: flex;
     justify-content: end;
     padding: 10px;
+}
+
+
+
+
+.blur{
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 10;
+    background-color: rgba(128, 128, 128, 0.486);
+}
+
+.cart{
+    position: absolute;
+    z-index: 11;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 500px;
+    background-color: #6366F1;
+    padding: 15px;
+    border-radius: 10px;
+}
+
+
+
+.cart-header{
+    color: #F3F4F6;
+    font-size: 25px;
+    margin-bottom: 10px;
+}
+
+.cart-items{
+    margin-bottom: 20px;
+}
+                
+.cart-items .item{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 18px;
+    color: #F3F4F6;
+    box-shadow: 0 0 2px #F3F4F6;
+    margin-bottom: 7px;
+    padding: 10px 15px;
+    
+}
+.cart-items .item .item-name{
+
+}
+
+.cart-items .item .item-action{
+    display: flex;
+    gap: 10px;
+    align-items: center;
+
+}
+
+.cart-items .item .item-action button{
+    height: 30px;
+    width: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.cart-total{
+    color: #F3F4F6;
+    font-size: 18px;
+    display: flex;
+    justify-content: end;
+    margin-bottom: 10px;
+}
+
+.cart-footer{
+    display: flex;
+    justify-content: end;
 }

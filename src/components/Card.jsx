@@ -1,19 +1,18 @@
 import React from 'react'
 
 
-export default function Card({img}) {
+export default function Card({product}) {
+  console.log(product)
   return (
     <div className="card">
         <div className="card-header">
-          <img src={img} alt="No-Img" />
+          <img src={product.image_url} alt="No-Img" />
         </div>
         <div className="card-body">
-          <h3>green hodied jacket</h3>
-          <p className="price">Rs. 700</p>
+          <h3>{product.product_name}</h3>
+          <p className="price">Rs. {product.price}</p>
           <p className="description">
-            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Ullam
-            adipisci in consequuntur distinctio, perferendis repellat quas
-            perspiciatis voluptatem mollitia! Alias.
+            {product.description}
           </p>
         </div>
           <div className="card-footer">

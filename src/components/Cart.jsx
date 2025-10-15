@@ -1,6 +1,7 @@
 import React from 'react'
+import CartItem from './CartItem'
 
-export default function Cart({dispatch}) {
+export default function Cart({dispatch, cart}) {
   return (<>
     <div className='blur' onClick={() => {
         dispatch({
@@ -15,27 +16,11 @@ export default function Cart({dispatch}) {
             <h3>Cart</h3>
         </div>
         <div className="cart-items">
-            <div className="item">
-                <div className="item-name">Blue Floral Printed Cotton Top</div>
-                <div className="item-action">
-                    <button>-</button> <span>1</span>
-                    <button>+</button>
-                </div>
-            </div>
-            <div className="item">
-                <div className="item-name">Blue Floral Printed Cotton Top</div>
-                <div className="item-action">
-                    <button>-</button> <span>1</span>
-                    <button>+</button>
-                </div>
-            </div>
-            <div className="item">
-                <div className="item-name">Blue Floral Printed Cotton Top</div>
-                <div className="item-action">
-                    <button>-</button> <span>1</span>
-                    <button>+</button>
-                </div>
-            </div>
+            {
+                cart.map((item) => {
+                    return <CartItem item = {item} dispatch = {dispatch}/>
+                })
+            }
         </div>
         <div className="cart-total">
             <p>Cart total: 2999/-</p>

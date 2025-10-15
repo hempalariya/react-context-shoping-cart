@@ -17,17 +17,45 @@ function reducer(state, action) {
       return { ...state, status: "ready", products: action.payload };
     case "error":
       return { ...state, status: "error" };
+    case "addToCart": {
+      console.log(state.cart)
+      const item = action.payload
+      const existingItem = state.cart.find((cartItem) => item.id === cartItem.id)
+      if(existingItem){
+        return{
+          ...state,
+          cart: state.cart.map((cartItem) => {
+            return cartItem.id ===  item.id ? {...cartItem, quantity: cartItem.quantity + 1} : cartItem
+          })
+        }
+      }
+      return{
+        ...state, 
+        cart: [...state.cart, {...item, quantity: 1}]
+      }
+      
+    };
     case "cartOpen":
       return { ...state, cartOpen: true };
     case "cartClose":
       return { ...state, cartOpen: false };
+      case "itemQuantity": {
+
+        return {
+          ...state,
+          cart: state.cart.map((cartItem) => cartItem.id === action.payload.id ? {...cartItem, quantity: cartItem.quantity + action.payload.add} : cartItem)
+        }
+      }
     default:
       return state;
   }
 }
 
 export default function App() {
-  const [{ products, status, cartOpen }, dispatch] = useReducer(reducer, initialState);
+  const [{ products, status, cartOpen, cart }, dispatch] = useReducer(
+    reducer,
+    initialState
+  );
 
   useEffect(() => {
     const handleEsc = (e) => {
@@ -54,13 +82,15 @@ export default function App() {
 
   return (
     <div className="container">
-      <Header dispatch={dispatch} />
+      <Header dispatch={dispatch} itemCount = {cart.length}/>
       <main>
         {status === "loading" && <Loading />}
-        {status === "ready" && <List products={products} />}
-        {status === "error" && <p>Failed to load products. Please try again.</p>}
+        {status === "ready" && <List products={products} dispatch={dispatch} />}
+        {status === "error" && (
+          <p>Failed to load products. Please try again.</p>
+        )}
       </main>
-      {cartOpen && <Cart dispatch = {dispatch}/>}
+      {cartOpen && <Cart dispatch={dispatch} cart={cart} />}
     </div>
   );
 }

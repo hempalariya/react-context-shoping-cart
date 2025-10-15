@@ -1,8 +1,7 @@
 import React from 'react'
 
 
-export default function Card({product}) {
-  console.log(product)
+export default function Card({product, dispatch}) {
   return (
     <div className="card">
         <div className="card-header">
@@ -16,7 +15,12 @@ export default function Card({product}) {
           </p>
         </div>
           <div className="card-footer">
-            <button>Add to Cart</button>
+            <button onClick={() => {
+              dispatch({
+                type: 'addToCart',
+                payload: {...product}
+              })
+            }}>Add to Cart</button>
           </div>
       </div>
   )

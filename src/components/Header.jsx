@@ -1,13 +1,13 @@
 import React from 'react'
 
-export default function Header({dispatch}) {
+export default function Header({dispatch, itemCount}) {
   return (
     <header>
         <h1>Context Cart</h1>
         <button onClick={() => {
           dispatch({type: 'cartOpen'})
         }}>
-            Cart 0
+            Cart {itemCount}
         </button>
     </header>
   )

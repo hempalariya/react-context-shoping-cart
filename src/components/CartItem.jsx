@@ -1,7 +1,9 @@
-import React from 'react'
+import React, { useContext } from 'react'
+import { CartContext } from '../store/shoping-cart-context'
 
-export default function CartItem({item, dispatch}) {
+export default function CartItem({item}) {
     console.log(item)
+    const {dispatch} = useContext(CartContext)
   return (
     <div className="item">
                 <div className="item-name">{item.product_name}</div>

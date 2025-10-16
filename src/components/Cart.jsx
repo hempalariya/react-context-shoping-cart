@@ -1,7 +1,12 @@
-import React from "react";
+import React, { useContext } from "react";
+import { CartContext } from "../store/shoping-cart-context";
 import CartItem from "./CartItem";
 
-export default function Cart({ dispatch, cart }) {
+export default function Cart() {
+
+    const {cart, dispatch} = useContext(CartContext)
+
+
   return (
     <>
       <div
@@ -22,7 +27,7 @@ export default function Cart({ dispatch, cart }) {
           <div className="cart-body">
             <div className="cart-items">
               {cart.cartItems.map((item) => {
-                return <CartItem item={item} dispatch={dispatch} />;
+                return <CartItem item={item} dispatch={dispatch} key={item.product_name}/>;
               })}
             </div>
             <div className="cart-total">

@@ -4,12 +4,14 @@ import Loading from "./components/Loading";
 import List from "./components/List";
 import Cart from "./components/Cart";
 
-import {cartTotal} from './helper/total'
+import { cartTotal } from "./helper/total";
+
+import { CartContext } from "./store/shoping-cart-context";
 
 const initialState = {
   products: [],
   status: "loading", // "loading" | "ready" | "error"
-  cart: {cartItems: [], cartTotal: 0},
+  cart: { cartItems: [], cartTotal: 0 },
   cartOpen: false,
 };
 
@@ -22,7 +24,7 @@ function reducer(state, action) {
       return { ...state, status: "error" };
 
     case "addToCart": {
-      console.log(state.cart)
+      console.log(state.cart);
       const item = action.payload;
       const existingItem = state.cart.cartItems.find(
         (cartItem) => cartItem.id === item.id
@@ -36,10 +38,7 @@ function reducer(state, action) {
             : cartItem
         );
       } else {
-        updatedCartItems = [
-          ...state.cart.cartItems,
-          { ...item, quantity: 1 },
-        ];
+        updatedCartItems = [...state.cart.cartItems, { ...item, quantity: 1 }];
       }
 
       return {
@@ -65,7 +64,7 @@ function reducer(state, action) {
             ? { ...cartItem, quantity: cartItem.quantity + add }
             : cartItem
         )
-        .filter((cartItem) => cartItem.quantity > 0); 
+        .filter((cartItem) => cartItem.quantity > 0);
 
       return {
         ...state,
@@ -101,8 +100,6 @@ export default function App() {
     initialState
   );
 
-  
-
   useEffect(() => {
     const handleEsc = (e) => {
       if (e.key === "Escape") dispatch({ type: "cartClose" });
@@ -126,19 +123,21 @@ export default function App() {
     fetchProducts();
   }, []);
 
-
-
   return (
-    <div className="container">
-      <Header dispatch={dispatch} itemCount = {cart.cartItems.length}/>
-      <main>
-        {status === "loading" && <Loading />}
-        {status === "ready" && <List products={products} dispatch={dispatch} />}
-        {status === "error" && (
-          <p>Failed to load products. Please try again.</p>
-        )}
-      </main>
-      {cartOpen && <Cart dispatch={dispatch} cart={cart} />}
-    </div>
+    <CartContext.Provider value={{ products, status, cartOpen, cart, dispatch }}>
+      <div className="container">
+        <Header/>
+        <main>
+          {status === "loading" && <Loading />}
+          {status === "ready" && (
+            <List />
+          )}
+          {status === "error" && (
+            <p>Failed to load products. Please try again.</p>
+          )}
+        </main>
+        {cartOpen && <Cart />}
+      </div>
+    </CartContext.Provider>
   );
 }

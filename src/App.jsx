@@ -4,10 +4,12 @@ import Loading from "./components/Loading";
 import List from "./components/List";
 import Cart from "./components/Cart";
 
+import {cartTotal} from './helper/total'
+
 const initialState = {
   products: [],
   status: "loading", // "loading" | "ready" | "error"
-  cart: [],
+  cart: {cartItems: [], cartTotal: 0},
   cartOpen: false,
 };
 
@@ -15,37 +17,79 @@ function reducer(state, action) {
   switch (action.type) {
     case "ready":
       return { ...state, status: "ready", products: action.payload };
+
     case "error":
       return { ...state, status: "error" };
+
     case "addToCart": {
       console.log(state.cart)
-      const item = action.payload
-      const existingItem = state.cart.find((cartItem) => item.id === cartItem.id)
-      if(existingItem){
-        return{
-          ...state,
-          cart: state.cart.map((cartItem) => {
-            return cartItem.id ===  item.id ? {...cartItem, quantity: cartItem.quantity + 1} : cartItem
-          })
-        }
+      const item = action.payload;
+      const existingItem = state.cart.cartItems.find(
+        (cartItem) => cartItem.id === item.id
+      );
+
+      let updatedCartItems;
+      if (existingItem) {
+        updatedCartItems = state.cart.cartItems.map((cartItem) =>
+          cartItem.id === item.id
+            ? { ...cartItem, quantity: cartItem.quantity + 1 }
+            : cartItem
+        );
+      } else {
+        updatedCartItems = [
+          ...state.cart.cartItems,
+          { ...item, quantity: 1 },
+        ];
       }
-      return{
-        ...state, 
-        cart: [...state.cart, {...item, quantity: 1}]
-      }
-      
-    };
+
+      return {
+        ...state,
+        cart: {
+          cartItems: updatedCartItems,
+          cartTotal: cartTotal(updatedCartItems),
+        },
+      };
+    }
+
     case "cartOpen":
       return { ...state, cartOpen: true };
+
     case "cartClose":
       return { ...state, cartOpen: false };
-      case "itemQuantity": {
 
-        return {
-          ...state,
-          cart: state.cart.map((cartItem) => cartItem.id === action.payload.id ? {...cartItem, quantity: cartItem.quantity + action.payload.add} : cartItem)
-        }
-      }
+    case "itemQuantity": {
+      const { id, add } = action.payload;
+      const updatedCartItems = state.cart.cartItems
+        .map((cartItem) =>
+          cartItem.id === id
+            ? { ...cartItem, quantity: cartItem.quantity + add }
+            : cartItem
+        )
+        .filter((cartItem) => cartItem.quantity > 0); 
+
+      return {
+        ...state,
+        cart: {
+          cartItems: updatedCartItems,
+          cartTotal: cartTotal(updatedCartItems),
+        },
+      };
+    }
+
+    case "removeItem": {
+      const updatedCartItems = state.cart.cartItems.filter(
+        (cartItem) => cartItem.id !== action.payload
+      );
+
+      return {
+        ...state,
+        cart: {
+          cartItems: updatedCartItems,
+          cartTotal: cartTotal(updatedCartItems),
+        },
+      };
+    }
+
     default:
       return state;
   }
@@ -56,6 +100,8 @@ export default function App() {
     reducer,
     initialState
   );
+
+  
 
   useEffect(() => {
     const handleEsc = (e) => {
@@ -80,9 +126,11 @@ export default function App() {
     fetchProducts();
   }, []);
 
+
+
   return (
     <div className="container">
-      <Header dispatch={dispatch} itemCount = {cart.length}/>
+      <Header dispatch={dispatch} itemCount = {cart.cartItems.length}/>
       <main>
         {status === "loading" && <Loading />}
         {status === "ready" && <List products={products} dispatch={dispatch} />}

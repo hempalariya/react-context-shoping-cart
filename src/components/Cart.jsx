@@ -1,36 +1,39 @@
-import React from 'react'
-import CartItem from './CartItem'
+import React from "react";
+import CartItem from "./CartItem";
 
-export default function Cart({dispatch, cart}) {
-  return (<>
-    <div className='blur' onClick={() => {
-        dispatch({
-            type: 'cartClose'
-        })
-    }}>
+export default function Cart({ dispatch, cart }) {
+  return (
+    <>
+      <div
+        className="blur"
+        onClick={() => {
+          dispatch({
+            type: "cartClose",
+          });
+        }}
+      ></div>
 
-    </div>
-
-    <div className="cart">
+      <div className="cart">
         <div className="cart-header">
-            <h3>Cart</h3>
+          <h3>Cart</h3>
         </div>
-        <div className="cart-items">
-            {
-                cart.map((item) => {
-                    return <CartItem item = {item} dispatch = {dispatch}/>
-                })
-            }
-        </div>
-        <div className="cart-total">
-            <p>Cart total: 2999/-</p>
-        </div>
-        <div className="cart-footer">
-            <button>Checkout</button>
-        </div>
-    </div>
-  
-  </>
-    
-  )
+        {cart.cartItems.length === 0 && <h3 className="no-cart-items">Cart is empty.</h3>}
+        {cart.cartItems.length > 0 && (
+          <div className="cart-body">
+            <div className="cart-items">
+              {cart.cartItems.map((item) => {
+                return <CartItem item={item} dispatch={dispatch} />;
+              })}
+            </div>
+            <div className="cart-total">
+              <p>Cart total: {cart.cartTotal}/-</p>
+            </div>
+            <div className="cart-footer">
+              <button>Checkout</button>
+            </div>
+          </div>
+        )}
+      </div>
+    </>
+  );
 }

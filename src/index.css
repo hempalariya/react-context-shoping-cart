@@ -131,6 +131,12 @@ button:hover{
     margin-bottom: 10px;
 }
 
+.no-cart-items{
+    color: #F3F4F6;
+    font-size: 20px;
+    text-align: center;
+}
+
 .cart-items{
     margin-bottom: 20px;
 }
